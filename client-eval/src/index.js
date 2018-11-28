@@ -4,12 +4,13 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css';
 import 'semantic-ui-css/semantic.css'
 import App from './App';
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk'
 
 import reducer from './store/reducers/reducer';
 
-const store = createStore(reducer);
+const store = createStore(reducer, applyMiddleware(thunk));
 
 const app = (
   <Provider store={store}>

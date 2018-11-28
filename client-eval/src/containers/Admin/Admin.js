@@ -1,58 +1,49 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Container, Dimmer, Loader, Button, Checkbox, Icon, Table } from 'semantic-ui-react';
+import { Container, Dimmer, Loader, Header, Button, Checkbox, Icon, Table } from 'semantic-ui-react';
 
-import * as actionTypes from '../../store/actions/actions';
+import * as employeeAction from '../../store/actions/employeeAction';
+import AddEmployeeModal from './UI/AddEmployeeModal'
 
 class Admin extends Component {
   state = {
-    checkedEmployees: []
+    checkedEmployeesId: []
   }
 
   componentDidMount () {
-    this.getEmployees()
+    this.props.onInitEmployees()
   }
 
-  fetch (endpoint) {
-    return window.fetch(endpoint)
-      .then(response => response.json())
-      .catch(error => console.log(error))
+  handleToggleModal = () => {
+
   }
 
-  getEmployees = () => {
-    this.fetch('/api/employees')
-      .then(employees => {
-        if (employees.length) {
-          this.setState({employees: employees})
-          this.getEmployee(employees[0].id)
-        } else {
-          this.setState({employees: []})
-        }
-      })
-  }
-
-  handleEmployeeRemoved = (event, result) => {
-    console.log(result.value)
+  handleEmployeeRemoved = () => {
+    this.props.onEmployeeDeleted(this.state.checkedEmployeesId);
+    this.setState({
+      ...this.state,
+      checkedEmployeesId: []
+    })
   }
 
   handleToggleEmployee = (e, result) => {
-    const {checked, checkedemployee} = result
+    const {checked, checkedemployeeid} = result
     if (checked) {
       this.setState({
         ...this.state,
-        checkedEmployees: [
-          ...this.state.checkedEmployees,
-          checkedemployee
+        checkedEmployeesId: [
+          ...this.state.checkedEmployeesId,
+          checkedemployeeid
         ]
       })
     } else {
-      const currentEmployees = this.state.checkedEmployees.filter(employee => (
-        employee.id !== checkedemployee.id
+      const currentEmployees = this.state.checkedEmployeesId.filter(employeeId => (
+        employeeId !== checkedemployeeid
       ))
 
       this.setState({
         ...this.state,
-        checkedEmployees: currentEmployees
+        checkedEmployeesId: currentEmployees
       })
     }
   }
@@ -63,7 +54,7 @@ class Admin extends Component {
   }
 
   render () {
-    let {employees} = this.state
+    let {employees} = this.props
 
     let table = (
       <Dimmer active inverted>
@@ -73,15 +64,17 @@ class Admin extends Component {
 
     if (employees) {
       let table_rows = employees.map( employee => (
-        <Table.Row key={employee.id}>
-          <Table.Cell collapsing>
-            <Checkbox slider checkedemployee={employee} onClick={this.handleToggleEmployee} />
-          </Table.Cell>
-          <Table.Cell>{employee.name}</Table.Cell>
-          <Table.Cell>{employee.created_at}</Table.Cell>
-          <Table.Cell>{employee.email}</Table.Cell>
-          <Table.Cell>No</Table.Cell>
-        </Table.Row>
+        employee.id ?
+          <Table.Row key={employee.id}>
+            <Table.Cell collapsing>
+              <Checkbox slider checkedemployeeid={employee.id} onClick={this.handleToggleEmployee} />
+            </Table.Cell>
+            <Table.Cell>{employee.name}</Table.Cell>
+            <Table.Cell>{employee.created_at}</Table.Cell>
+            <Table.Cell>{employee.email}</Table.Cell>
+            <Table.Cell>No</Table.Cell>
+          </Table.Row>
+          : null
       ))
       table = (
         <Table celled compact definition>
@@ -102,12 +95,11 @@ class Admin extends Component {
             <Table.Row>
               <Table.HeaderCell />
               <Table.HeaderCell colSpan='4'>
-                <Button floated='right' icon labelPosition='left' primary size='small'>
-                  <Icon name='user' /> Add Employee
-                </Button>
-                <Button size='small' onClick={this.handleEmployeeRemoved}>Delete</Button>
-                <Button disabled size='small'>
-                  Delete All
+                <AddEmployeeModal submitAction={this.props.onEmployeeCreated}/>
+                <Button
+                   disabled={this.state.checkedEmployeesId.length === 0}
+                   size='small' onClick={this.handleEmployeeRemoved}>
+                     Delete
                 </Button>
               </Table.HeaderCell>
             </Table.Row>
@@ -118,6 +110,12 @@ class Admin extends Component {
 
     return (
       <Container text>
+        <Header as='h2' icon textAlign='center' color='teal'>
+          <Icon name='unordered list' circular />
+          <Header.Content>
+            List of Employees
+          </Header.Content>
+        </Header>
         {table}
       </Container>
     )
@@ -132,9 +130,10 @@ const mapStateToProps = state => (
 
 const mapDispatchToProps = dispatch => (
   {
-    onEmployeeCreated: (employee) => dispatch({type: actionTypes.CREATE_EMPLOYEE}),
-    onEmployeeRemoved: (employees) => dispatch({type: actionTypes.DELETE_EMPLOYEE}),
-    onEmployeeUpdated: (employee) => dispatch({type: actionTypes.UPDATE_EMPLOYEE}),
+    onInitEmployees: () => dispatch(employeeAction.initEmployees()),
+    onEmployeeCreated: (employee) => dispatch(employeeAction.createEmployee(employee)),
+    onEmployeeDeleted: (employees) => dispatch(employeeAction.deleteEmployees(employees)),
+    onEmployeeUpdated: (employee) => dispatch(employeeAction.updateEmployee(employee)),
   }
 )
 

@@ -6,19 +6,28 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case actionTypes.INIT_EMPLOYEES:
+      return {
+        ...state,
+        employees: [
+          ...state.employees,
+          ...action.employees
+        ]
+      }
     case actionTypes.CREATE_EMPLOYEE:
       return {
         ...state,
         employees: [
           ...state.employees,
-          action.targetEmployee
+          action.employee
         ]
       }
     case actionTypes.DELETE_EMPLOYEE:
-      console.log("AAAAHAHIAIIAAA")
       return {
         ...state,
-        employees: state.employees.filter(employee => employee.email !== action.targetEmployee.email )
+        employees: state.employees.filter(employee => (
+          !action.employeesId.some(checkedEmployeeId => employee.id === checkedEmployeeId)
+        ))
       }
     case actionTypes.UPDATE_EMPLOYEE:
       return {
