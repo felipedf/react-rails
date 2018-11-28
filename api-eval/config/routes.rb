@@ -11,4 +11,8 @@ Rails.application.routes.draw do
                sessions: 'sessions',
                registrations: 'registrations'
              }
+
+  scope '/api' do
+    resources :employees, only: [:index, :show]
+  end
 end
