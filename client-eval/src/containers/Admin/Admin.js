@@ -4,6 +4,7 @@ import { Container, Dimmer, Loader, Header, Button, Checkbox, Icon, Table } from
 
 import * as employeeAction from '../../store/actions/employeeAction';
 import AddEmployeeModal from './UI/AddEmployeeModal'
+import PreviewEmployeeModal from './UI/PreviewEmployeeModal'
 
 class Admin extends Component {
   state = {
@@ -12,10 +13,6 @@ class Admin extends Component {
 
   componentDidMount () {
     this.props.onInitEmployees()
-  }
-
-  handleToggleModal = () => {
-
   }
 
   handleEmployeeRemoved = () => {
@@ -48,6 +45,10 @@ class Admin extends Component {
     }
   }
 
+  handleEmployeePreview = employee => {
+
+  }
+
   getEmployee (id) {
     this.fetch(`/api/employees/${id}`)
       .then(employee => this.setState({employee: employee}))
@@ -63,7 +64,7 @@ class Admin extends Component {
     )
 
     if (employees) {
-      let table_rows = employees.map( employee => (
+      let tableRows = employees.map( employee => (
         employee.id ?
           <Table.Row key={employee.id}>
             <Table.Cell collapsing>
@@ -72,7 +73,7 @@ class Admin extends Component {
             <Table.Cell>{employee.name}</Table.Cell>
             <Table.Cell>{employee.created_at}</Table.Cell>
             <Table.Cell>{employee.email}</Table.Cell>
-            <Table.Cell>No</Table.Cell>
+            <Table.Cell><PreviewEmployeeModal employeeData={employee}/></Table.Cell>
           </Table.Row>
           : null
       ))
@@ -84,12 +85,12 @@ class Admin extends Component {
               <Table.HeaderCell>Name</Table.HeaderCell>
               <Table.HeaderCell>Registration Date</Table.HeaderCell>
               <Table.HeaderCell>E-mail address</Table.HeaderCell>
-              <Table.HeaderCell>CRUD</Table.HeaderCell>
+              <Table.HeaderCell />
             </Table.Row>
           </Table.Header>
 
           <Table.Body>
-            {table_rows}
+            {tableRows}
           </Table.Body>
           <Table.Footer fullWidth>
             <Table.Row>

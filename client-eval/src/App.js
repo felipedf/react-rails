@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import AdminHome from './containers/Admin/Admin'
+import Login from './containers/Auth/Login'
 import Home from './Home'
 import NotFound from './NotFound'
 
@@ -9,6 +10,7 @@ class App extends Component {
     return (
       <Switch>
         <Route path='/admin' component={AdminHome} />
+        <Route path='/login' component={Login} />
         <Route path='/' exact component={Home} />
         <Route component={NotFound} />
       </Switch>

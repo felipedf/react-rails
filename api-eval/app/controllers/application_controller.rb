@@ -1,8 +1,8 @@
-class ApplicationController < ActionController::API
+class ApplicationController < ActionController::Base
   # before_action :authenticate_user!
   # protect_from_forgery with: :exception
-
   def render_resource(resource)
+    binding.pry
     if resource.errors.empty?
       render json: resource
     else

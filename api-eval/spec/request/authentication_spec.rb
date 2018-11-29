@@ -6,7 +6,6 @@ RSpec.describe 'POST /login', type: :request do
   let(:params) do
     {
       user: {
-        name: user.name,
         email: user.email,
         password: user.password
       }
@@ -16,10 +15,10 @@ RSpec.describe 'POST /login', type: :request do
   context 'when params are correct' do
     before do
       post url, params: params
-      response
     end
 
     it 'returns 200' do
+      binding.pry
       expect(response).to have_http_status(200)
     end
 

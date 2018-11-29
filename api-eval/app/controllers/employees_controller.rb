@@ -8,6 +8,7 @@ class EmployeesController < ApplicationController
   end
 
   def create
+    binding.pry
     render json: User.create!(employee_params)
   end
 
