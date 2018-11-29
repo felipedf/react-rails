@@ -7,13 +7,12 @@ import { fetchGet, fetchDelete, fetchPost } from '../../shared/utility'
 //   }
 // );
 //
-// const authSuccess = (token, userId) => (
-//   {
-//     type: actionType.AUTH_SUCCESS,
-//     token: token,
-//     userId: userId
-//   }
-// );
+const authSuccess = user => (
+  {
+    type: action.AUTH_SUCCESS,
+    user: user
+  }
+);
 //
 // const authFail = error => (
 //   {
@@ -39,23 +38,17 @@ import { fetchGet, fetchDelete, fetchPost } from '../../shared/utility'
 //   }
 // )
 //
-// export const authCheckState = () => (
-//   dispatch => {
-//     const token = localStorage.getItem('token');
-//     if (!token) {
-//       dispatch(logout());
-//     } else {
-//       const expirationTime = new Date(localStorage.getItem('expirationTime'));
-//       if (expirationTime > new Date()) {
-//         const userId = localStorage.getItem('userId');
-//         dispatch(authSuccess(token, userId));
-//         dispatch(checkAuthTimeout( (expirationTime.getTime() - new Date().getTime()) / 1000 ));
-//       } else {
-//         dispatch(logout());
-//       }
-//     }
-//   }
-// )
+export const authCheckState = () => (
+  dispatch => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      console.log("Not Logged in")
+      // dispatch(logout());
+    } else {
+      dispatch(authSuccess(user));
+    }
+  }
+)
 //
 // export const setAuthRedirectPath = (path = '/') => (
 //   {
@@ -74,13 +67,9 @@ export const auth = (email, password) => (
       }
     };
     fetchPost('/login', authData)
-      .then(response => {
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        console.log(response)
-        // localStorage.setItem('userId', response.data.localId);
-        // localStorage.setItem('token', response.data.idToken);
-        // localStorage.setItem('expirationTime', expirationTime);
-        // dispatch(authSuccess(response.data.idToken, response.data.localId));
+      .then(user => {
+        localStorage.setItem('user', JSON.stringify(user));
+        dispatch(authSuccess(user));
         // dispatch(checkAuthTimeout(response.data.expiresIn));
       })
       .catch(err => {

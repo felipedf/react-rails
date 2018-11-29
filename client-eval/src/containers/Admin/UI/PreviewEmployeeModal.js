@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Header, Image, Modal, Icon } from 'semantic-ui-react';
 
-class UIModal extends Component {
+class PreviewEmployeeModal extends Component {
   state = { modalOpen: false }
 
   handleClose = () => this.setState({ modalOpen: false })
@@ -10,7 +10,7 @@ class UIModal extends Component {
   render() {
     let previewEmployeeButton = (
       <Button onClick={this.handleOpen}
-         icon floated='center'>
+         icon>
         <Icon name='eye' floated='right' />
       </Button>
     )
@@ -32,4 +32,4 @@ class UIModal extends Component {
   }
 }
 
-export default UIModal
+export default PreviewEmployeeModal

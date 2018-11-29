@@ -4,7 +4,7 @@ const initialState = {
   employees: []
 }
 
-const reducer = (state = initialState, action) => {
+const employeeReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.INIT_EMPLOYEES:
       return {
@@ -38,4 +38,4 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-export default reducer;
+export default employeeReducer;

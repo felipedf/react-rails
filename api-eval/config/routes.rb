@@ -13,6 +13,9 @@ Rails.application.routes.draw do
              }
 
   scope '/api' do
-    resources :employees
+    resources :employees do
+      resources :feedbacks, only: [:index, :show]
+    end
+    resources :feedbacks, only: [:update]
   end
 end

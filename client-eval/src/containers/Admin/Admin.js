@@ -125,7 +125,7 @@ class Admin extends Component {
 
 const mapStateToProps = state => (
   {
-    employees: state.employees
+    employees: state.employee.employees
   }
 )
 

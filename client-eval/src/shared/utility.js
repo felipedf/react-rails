@@ -22,3 +22,15 @@ export const fetchDelete = (endpoint) => (
   }).then(response => response.json())
     .catch(error => console.log(error))
 )
+
+export const fetchPut = (endpoint, body) => {
+  return window.fetch(endpoint, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({rating: body})
+  }).then(response => response.json())
+    .catch(error => console.log(error))
+}

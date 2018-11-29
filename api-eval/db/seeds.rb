@@ -41,6 +41,18 @@ def seed_feedback(users)
   end
 end
 
+def seed_pending_feedback(users)
+  5.times do |i|
+    feedback = Feedback.new(
+      rating: rand(5),
+      pending: true,
+    )
+    users[i].feedback << feedback
+    users[i+2].ratings << feedback
+  end
+end
+
 users = seed_users
 seed_feedback(users)
+seed_pending_feedback(users)
 seed_admin

@@ -26,10 +26,14 @@ ActiveRecord::Schema.define(version: 20181128223706) do
     t.index ["rated_user_id"], name: "index_feedbacks_on_rated_user_id", using: :btree
   end
 
+  create_table "jwt_blacklist", force: :cascade do |t|
+    t.string "jti", null: false
+    t.index ["jti"], name: "index_jwt_blacklist_on_jti", using: :btree
+  end
+
   create_table "jwt_blacklists", force: :cascade do |t|
-    t.string   "jti", null: false
-    t.datetime "exp", null: false
-    t.index ["jti"], name: "index_jwt_blacklists_on_jti", using: :btree
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
