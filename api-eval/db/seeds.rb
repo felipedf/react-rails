@@ -52,7 +52,7 @@ def seed_pending_feedback(users)
   end
 end
 
-users = seed_users
-seed_feedback(users)
-seed_pending_feedback(users)
+# users = seed_users
+# seed_feedback(users)
+# seed_pending_feedback(users)
 seed_admin

@@ -4,15 +4,20 @@ class EmployeesController < ApplicationController
   end
 
   def show
-    render json: User.find(params[:id])
+    render json: Employee.find(params[:id])
   end
 
   def create
-    render json: User.create!(employee_params)
+    begin
+      employee = Employee.create!(employee_params)
+      render json: employee, status: :created
+    rescue => err
+      render json: {error: err}, status: :bad_request
+    end
   end
 
   def destroy
-    render json: User.where(id: params[:id].split(',')).destroy_all
+    render json: Employee.where(id: params[:id].split(',')).destroy_all
   end
 
   private

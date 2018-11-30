@@ -4,6 +4,8 @@ const initialState = {
   feedbacks: {}
 }
 
+// Convert the list of feedbacks from the backend to an object, so it will be
+// we can do O(1) lookups
 const listToObjectFeedback = action => {
   const feedbacks = action.feedback
   const result = feedbacks.reduce((map, feedback) => {

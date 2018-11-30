@@ -4,7 +4,13 @@ import { fetchGet, fetchDelete, fetchPost } from '../../shared/utility'
 export const createEmployee = employee => (
   dispatch => (
     fetchPost(`/api/employees`, employee)
-      .then(employee => dispatch({ type: action.CREATE_EMPLOYEE, employee: employee }))
+      .then(employee => {
+        if (employee.error) {
+          dispatch(createFail(employee.error))
+        } else {
+          dispatch({ type: action.CREATE_EMPLOYEE, employee: employee })
+        }
+      })
       .catch(error =>{
         console.log(error)
       })
@@ -39,3 +45,10 @@ export const initEmployees = () => {
       })
   }
 };
+
+const createFail = error => (
+  {
+    type: action.CREATE_FAIL,
+    error: error
+  }
+);

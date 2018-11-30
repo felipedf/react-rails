@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Container, Dimmer, Loader, Header, Button, Checkbox, Icon, Table } from 'semantic-ui-react';
+import { Container, Dimmer, Loader, Header, Icon, Message} from 'semantic-ui-react';
 
 import * as employeeAction from '../../store/actions/employeeAction';
 import * as feedbackAction from '../../store/actions/feedbackAction';
-import AddEmployeeModal from './UI/AddEmployeeModal'
-import PreviewEmployeeModal from './UI/PreviewEmployeeModal'
+import EmployeeTableData from './EmployeeTableData/EmployeeTableData'
 
 class Admin extends Component {
   state = {
@@ -46,11 +45,6 @@ class Admin extends Component {
     }
   }
 
-  getEmployee (id) {
-    this.fetch(`/api/employees/${id}`)
-      .then(employee => this.setState({employee: employee}))
-  }
-
   render () {
     let {employees} = this.props
 
@@ -61,58 +55,21 @@ class Admin extends Component {
     )
 
     if (employees) {
-      let tableRows = employees.map( employee => (
-        employee.id ?
-          <Table.Row key={employee.id}>
-            <Table.Cell collapsing>
-              <Checkbox slider checkedemployeeid={employee.id} onClick={this.handleToggleEmployee} />
-            </Table.Cell>
-            <Table.Cell>{employee.name}</Table.Cell>
-            <Table.Cell>{employee.created_at}</Table.Cell>
-            <Table.Cell>{employee.email}</Table.Cell>
-            <Table.Cell>{employee.rating.toFixed(2)}</Table.Cell>
-            <Table.Cell>
-              <PreviewEmployeeModal
-                employees={employees}
-                currentEmployee={employee}
-                submitAction={this.props.onEmployeeRequestReview}
-              />
-            </Table.Cell>
-          </Table.Row>
-          : null
-      ))
       table = (
-        <Table celled compact definition>
-          <Table.Header fullWidth>
-            <Table.Row>
-              <Table.HeaderCell />
-              <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Registration Date</Table.HeaderCell>
-              <Table.HeaderCell>E-mail address</Table.HeaderCell>
-              <Table.HeaderCell>Rating</Table.HeaderCell>
-              <Table.HeaderCell />
-            </Table.Row>
-          </Table.Header>
-
-          <Table.Body>
-            {tableRows}
-          </Table.Body>
-          <Table.Footer fullWidth>
-            <Table.Row>
-              <Table.HeaderCell />
-              <Table.HeaderCell colSpan='4'>
-                <AddEmployeeModal submitAction={this.props.onEmployeeCreated}/>
-                <Button
-                   disabled={this.state.checkedEmployeesId.length === 0}
-                   size='small' onClick={this.handleEmployeeRemoved}>
-                     Delete
-                </Button>
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Footer>
-        </Table>
+        <EmployeeTableData
+          requestReviewAction={this.props.onEmployeeRequestReview}
+          toggleEmployeeAction={this.handleToggleEmployee}
+          removeEmployeeAction={this.handleEmployeeRemoved}
+          employeeCreateAction={this.props.onEmployeeCreated}
+          isDisabled={this.state.checkedEmployeesId.length === 0}
+          employees={employees}
+        />
       )
     }
+
+    let errorMessage = this.props.error
+      ? <Message error header={this.props.error}/>
+      : null
 
     return (
       <Container text>
@@ -122,6 +79,7 @@ class Admin extends Component {
             List of Employees
           </Header.Content>
         </Header>
+        {errorMessage}
         {table}
       </Container>
     )
@@ -130,7 +88,8 @@ class Admin extends Component {
 
 const mapStateToProps = state => (
   {
-    employees: state.employee.employees
+    employees: state.employee.employees,
+    error: state.employee.error
   }
 )
 

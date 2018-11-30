@@ -1,0 +1,29 @@
+version: '2'
+services:
+ db:
+   image: postgres:9.6
+   environment:
+     - POSTGRES_USER:'postgres'
+     - POSTGRES_DB:'api-eval_development'
+   volumes:
+     - ./tmp/db:/var/lib/postgresql/data
+   ports:
+     - "5432:5432"
+ api:
+   build: ./api-eval
+   command: bash -c "rails db:setup && bundle exec rails s -p 3001 -b '0.0.0.0'"
+   volumes:
+     - ./api-eval:/api-eval
+   ports:
+     - "3001:3001"
+   depends_on:
+     - db
+ web:
+   build: ./client-eval
+   command: npm start
+   volumes:
+     - ./client-eval:/client-eval
+   ports:
+     - "3000:3000"
+   depends_on:
+     - api

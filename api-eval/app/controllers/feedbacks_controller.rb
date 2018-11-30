@@ -5,18 +5,26 @@ class FeedbacksController < ApplicationController
   end
 
   def create
-    render json: Feedback.create!(feedback_params)
+    begin
+      render json: Feedback.create!(feedback_params), status: :created
+    rescue => err
+      render json: err, status: :bad_request
+    end
   end
 
   def update
     feedback = Feedback.find(params[:id])
-    feedback.update!(rating: params[:rating], pending: false)
-    render json: feedback
+    begin
+      feedback.update!(rating: feedback_params[:rating], pending: false)
+      render json: feedback
+    rescue => err
+      render json: err, status: :bad_request
+    end
   end
 
   private
 
   def feedback_params
-    params.require(:feedback).permit(:owner_id, :rated_user_id)
+    params.require(:feedback).permit(:owner_id, :rated_user_id, :rating)
   end
 end

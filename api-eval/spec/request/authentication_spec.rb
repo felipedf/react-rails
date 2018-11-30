@@ -18,8 +18,7 @@ RSpec.describe 'POST /login', type: :request do
     end
 
     it 'returns 200' do
-      binding.pry
-      expect(response).to have_http_status(200)
+      expect(response).to have_http_status(:ok)
     end
 
     it 'returns JTW token in authorization header' do
