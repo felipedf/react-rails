@@ -1,18 +1,17 @@
 import * as actionTypes from '../actions/actions';
 
 const initialState = {
-  feedback: []
+  feedbacks: {}
 }
 
-const updateFeedback = (state, action) => {
-  const feedbacks = state.feedback
-  const newFeedback = action.feedback
-  return feedbacks.map(f => {
-    if (f.id === newFeedback.id) {
-      f = { ...f, rating: newFeedback.rating, peding: newFeedback.pending };
-    }
-    return f;
-  });
+const listToObjectFeedback = action => {
+  const feedbacks = action.feedback
+  const result = feedbacks.reduce((map, feedback) => {
+    map[feedback.id] = feedback;
+    return map;
+  }, {});
+
+  return result
 }
 
 const employeeReducer = (state = initialState, action) => {
@@ -20,15 +19,23 @@ const employeeReducer = (state = initialState, action) => {
     case actionTypes.INIT_FEEDBACK:
       return {
         ...state,
-        feedback: [
-          ...state.feedback,
-          ...action.feedback
-        ]
+        feedbacks: listToObjectFeedback(action)
       }
     case actionTypes.UPDATE_FEEDBACK:
       return {
         ...state,
-        feedback: updateFeedback(state, action)
+        feedbacks: {
+          ...state.feedbacks,
+          [action.feedback.id]: action.feedback
+        }
+      }
+    case actionTypes.CREATE_FEEDBACK:
+      return {
+        ...state,
+        feedbacks: {
+          ...state.feedbacks,
+          [action.feedback.id]: action.feedback
+        }
       }
     default: return state
 

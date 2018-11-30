@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Segment, Message } from 'semantic-ui-react'
 import { connect } from 'react-redux';
 
-import * as authAction from '../../store/actions/authAction'
+import './Login.css';
+import * as authAction from '../../../store/actions/authAction'
 
 class Login extends Component {
   state = {
@@ -22,20 +23,18 @@ class Login extends Component {
   }
 
   render() {
+    let errorMessage = this.props.error
+      ? <Message error header={this.props.error}/>
+      : null
+
     return (
       <div className='login-form'>
-        <style>{`
-          body > div,
-          body > div > div,
-          body > div > div > div.login-form {
-            height: 100%;
-          }
-        `}</style>
         <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
           <Grid.Column style={{ maxWidth: 450 }}>
             <Header as='h2' color='teal' textAlign='center'>
               Log-in to your account
             </Header>
+            {errorMessage}
             <Form size='large'>
               <Segment stacked>
                 <Form.Input
@@ -56,7 +55,6 @@ class Login extends Component {
                   value={this.state.password}
                   onChange={this.handleInputChange}
                 />
-
                 <Button onClick={this.handleLogin} color='teal' fluid size='large'>
                   Login
                 </Button>
@@ -74,4 +72,9 @@ const mapDispatchToProps = dispatch => (
     onAuth: (email, password) => dispatch(authAction.auth(email, password)),
   }
 )
-export default connect(null, mapDispatchToProps)(Login)
+
+const mapStateToProps = state => (
+  { error: state.auth.error }
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

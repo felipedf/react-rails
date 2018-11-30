@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Header, Image, Modal, Icon } from 'semantic-ui-react';
+import { Button, Header, Modal, Icon } from 'semantic-ui-react';
 import AddEmployeeForm from './AddEmployeeForm'
 
 class UIModal extends Component {
@@ -26,7 +26,7 @@ class UIModal extends Component {
         <Modal.Content>
           <Modal.Description>
             <Header>Default Profile Image</Header>
-              <AddEmployeeForm modalClose={this.handleClose} submitAction={this.props.submitAction}/>
+            <AddEmployeeForm modalClose={this.handleClose} submitAction={this.props.submitAction}/>
           </Modal.Description>
         </Modal.Content>
       </Modal>

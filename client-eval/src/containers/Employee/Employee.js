@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Container, Dimmer, Loader, Header, Button, Checkbox, Icon, Table, Rating } from 'semantic-ui-react';
+import { Container, Dimmer, Loader, Header, Button, Icon, Table, Rating } from 'semantic-ui-react';
 
 import * as feedbackAction from '../../store/actions/feedbackAction';
 
@@ -18,24 +18,12 @@ const RenderTable = props => (
       <Table.Body>
         {props.rows}
       </Table.Body>
-      <Table.Footer fullWidth>
-        <Table.Row>
-          <Table.HeaderCell />
-          <Table.HeaderCell colSpan='4'>
-            <Button
-               disabled
-               size='small'>
-                 Delete
-            </Button>
-          </Table.HeaderCell>
-        </Table.Row>
-      </Table.Footer>
     </Table>
 )
 
 class Employee extends Component {
   state = {
-    feedbacks: {}
+    ratedFeedbacks: {}
   }
 
   componentDidMount () {
@@ -55,11 +43,10 @@ class Employee extends Component {
         [feedbackid]: rating
       }
     })
-    // this.props.onUpdateRating(feedback, rating)
   }
 
   render () {
-    let {feedback} = this.props
+    let {feedbacks} = this.props
 
     let table = (
       <Dimmer active inverted>
@@ -67,8 +54,9 @@ class Employee extends Component {
       </Dimmer>
     )
 
-    if (feedback) {
-      let pendingRows = feedback.map( feedb => (
+    if (feedbacks) {
+      const feedbackValues = Object.values(feedbacks)
+      let pendingRows = feedbackValues.map( feedb => (
         feedb.id && feedb.pending ?
           <Table.Row key={feedb.id}>
             <Table.Cell>{feedb.rated_user_name}</Table.Cell>
@@ -83,7 +71,7 @@ class Employee extends Component {
           : null
       ))
 
-      let completedRows = feedback.map( feedb => (
+      let completedRows = feedbackValues.map( feedb => (
         feedb.id && !feedb.pending ?
           <Table.Row key={feedb.id}>
             <Table.Cell>{feedb.rated_user_name}</Table.Cell>
@@ -95,19 +83,25 @@ class Employee extends Component {
 
       table = (
         <React.Fragment>
+          <Header as='h2' icon textAlign='center' color='teal'>
+            <Icon name='unordered list' circular />
+            <Header.Content>
+              List of Pending Feedbacks
+            </Header.Content>
+          </Header>
+
           <RenderTable rows={pendingRows}/>
+            <Header as='h2' icon textAlign='center' color='teal'>
+              <Header.Content>
+                List of Given Feedbacks
+              </Header.Content>
+            </Header>
           <RenderTable rows={completedRows}/>
         </React.Fragment>
       )
     }
     return (
       <Container text>
-        <Header as='h2' icon textAlign='center' color='teal'>
-          <Icon name='unordered list' circular />
-          <Header.Content>
-            List of Employees
-          </Header.Content>
-        </Header>
         {table}
       </Container>
     )
@@ -116,7 +110,7 @@ class Employee extends Component {
 
 const mapStateToProps = state => (
   {
-    feedback: state.feedback.feedback,
+    feedbacks: state.feedback.feedbacks,
     user: state.auth.user
   }
 )
@@ -124,7 +118,7 @@ const mapStateToProps = state => (
 const mapDispatchToProps = dispatch => (
   {
     onInitFeedback: userId => dispatch(feedbackAction.initFeedback(userId)),
-    onUpdateFeedback: (feedbackId, rating) => dispatch(feedbackAction.updateFeedback(feedbackId, rating))
+    onUpdateFeedback: (feedbackId, rating) => dispatch(feedbackAction.updateFeedback(feedbackId, rating)),
   }
 )
 

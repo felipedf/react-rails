@@ -1,0 +1,6 @@
+body > div,
+body > div > main,
+body > div > main > div,
+body > div > main > div > div.login-form {
+  height: 100%;
+}

@@ -16,6 +16,6 @@ Rails.application.routes.draw do
     resources :employees do
       resources :feedbacks, only: [:index, :show]
     end
-    resources :feedbacks, only: [:update]
+    resources :feedbacks, only: [:update, :create]
   end
 end

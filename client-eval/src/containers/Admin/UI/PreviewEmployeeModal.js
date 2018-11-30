@@ -1,32 +1,52 @@
 import React, { Component } from 'react';
-import { Button, Header, Image, Modal, Icon } from 'semantic-ui-react';
+import { Button, Modal, Icon, Dropdown } from 'semantic-ui-react';
 
 class PreviewEmployeeModal extends Component {
-  state = { modalOpen: false }
+  state = { modalOpen: false, currentValue: null }
+
+  handleRequestReview = () => {
+    this.props.submitAction(this.props.currentEmployee.id, this.state.currentValue)
+    this.handleClose();
+  }
 
   handleClose = () => this.setState({ modalOpen: false })
   handleOpen = () => this.setState({ modalOpen: true })
 
+  handleChange = (e, { value }) => this.setState({ currentValue: value })
+
   render() {
-    let previewEmployeeButton = (
-      <Button onClick={this.handleOpen}
-         icon>
-        <Icon name='eye' floated='right' />
-      </Button>
-    )
+    const {employees, currentEmployee} = this.props
+
+    let employeesOptions = Object.values(employees).reduce( (arr, emp) => {
+      if (emp.id !== currentEmployee.id) {
+        arr.push({
+          text: emp.email,
+          value: emp.id
+        })
+      }
+      return arr
+    }, [])
 
     return (
       <Modal
-        trigger={previewEmployeeButton}
+        trigger={<Button onClick={this.handleOpen} icon='eye'/>}
         open={this.state.modalOpen}
         onClose={this.handleClose}
       >
-        <Modal.Header>Select a Photo</Modal.Header>
+        <Modal.Header>Assign an employee to be reviewed</Modal.Header>
         <Modal.Content>
-          <Modal.Description>
-            <Header>Default Profile Image</Header>
-          </Modal.Description>
+          <Dropdown
+            placeholder='Select an employee'
+            onChange={this.handleChange}
+            fluid selection options={employeesOptions} />
         </Modal.Content>
+        <Modal.Actions>
+          <Button
+            onClick={this.handleRequestReview}
+            color='green' inverted>
+            <Icon name='checkmark' /> Request Review
+          </Button>
+        </Modal.Actions>
       </Modal>
     )
   }

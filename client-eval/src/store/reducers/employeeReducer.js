@@ -9,10 +9,7 @@ const employeeReducer = (state = initialState, action) => {
     case actionTypes.INIT_EMPLOYEES:
       return {
         ...state,
-        employees: [
-          ...state.employees,
-          ...action.employees
-        ]
+        employees: action.employees
       }
     case actionTypes.CREATE_EMPLOYEE:
       return {

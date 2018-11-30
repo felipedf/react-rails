@@ -4,6 +4,8 @@ export const DELETE_EMPLOYEE = 'DELETE_EMPLOYEE';
 export const UPDATE_EMPLOYEE = 'UPDATE_EMPLOYEE';
 
 export const AUTH_SUCCESS = 'AUTH_SUCCESS';
+export const AUTH_LOGOUT = 'AUTH_LOGOUT';
+export const AUTH_FAIL = 'AUTH_FAIL';
 
 export const INIT_FEEDBACK = 'INIT_FEEDBACK';
 export const CREATE_FEEDBACK = 'CREATE_FEEDBACK';

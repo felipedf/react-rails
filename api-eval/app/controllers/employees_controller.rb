@@ -1,6 +1,6 @@
 class EmployeesController < ApplicationController
   def index
-    render json: User.all
+    render json: Employee.employees
   end
 
   def show
@@ -8,7 +8,6 @@ class EmployeesController < ApplicationController
   end
 
   def create
-    binding.pry
     render json: User.create!(employee_params)
   end
 
